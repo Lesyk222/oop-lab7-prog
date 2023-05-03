@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <memory>
 #include "CElectricityConsumption.h"
 #include "CFixedElectricityConsumption.h"
 #include "CSocialElectricityConsumption.h"
@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void GetMinMaxBills(CElectricityConsumption** arr, int size, double dConsumptionPerHours[24U], double& minBill, double& maxBill)
+void GetMinMaxBills(unique_ptr<CElectricityConsumption>* arr, int size, double dConsumptionPerHours[24U], double& minBill, double& maxBill)
 {
     minBill = arr[0]->GetElectricityBill(dConsumptionPerHours);
     maxBill = minBill;
@@ -30,30 +30,37 @@ int main()
 {
     double dConsumption[24] = { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24 };
 
-    CElectricityConsumption* consumption1 = new CFixedElectricityConsumption();
-    CElectricityConsumption* consumption2 = new CSocialElectricityConsumption();
-    CElectricityConsumption* consumption3 = new CMultiZoneElectricityConsumption();
+    unique_ptr<CElectricityConsumption> consumption1 = make_unique<CFixedElectricityConsumption>();
+    unique_ptr<CElectricityConsumption> consumption2 = make_unique<CSocialElectricityConsumption>();
+    unique_ptr<CElectricityConsumption> consumption3 = make_unique<CMultiZoneElectricityConsumption>();
 
     double bill1 = consumption1->GetElectricityBill(dConsumption);
     double bill2 = consumption2->GetElectricityBill(dConsumption);
     double bill3 = consumption3->GetElectricityBill(dConsumption);
 
-    cout << "Fixed consumption bill: " << bill1 << endl;
-    cout << "Social consumption bill: " << bill2 << endl;
-    cout << "Multi-zone consumption bill: " << bill3 << endl;
+    CElectricityConsumption* consumption = nullptr;
 
+    cout << "Choose the tariff (1 - Fixed, 2 - Social, 3 - Multi-zone): ";
+    int choice;
+    cin >> choice;
 
-    const int size = 3;
-    CElectricityConsumption* arr[size] = { consumption1, consumption2, consumption3 };
+    switch (choice) {
+    case 1:
+        consumption = dynamic_cast<CFixedElectricityConsumption*>(consumption1.get());
+        break;
+    case 2:
+        consumption = dynamic_cast<CSocialElectricityConsumption*>(consumption2.get());
+        break;
+    case 3:
+        consumption = dynamic_cast<CMultiZoneElectricityConsumption*>(consumption3.get());
+        break;
+    default:
+        cout << "Invalid choice!" << endl;
+    }
 
-    double minBill, maxBill;
-    GetMinMaxBills(arr, size, dConsumption, minBill, maxBill);
+    double selectedBill = consumption->GetElectricityBill(dConsumption);
 
-    cout << "Minimum bill: " << minBill << endl;
-    cout << "Maximum bill: " << maxBill << endl;
+    cout << "Choosed price: " << selectedBill << endl;
 
-    delete consumption1;
-    delete consumption2;
-    delete consumption3;
     return 0;
 }
