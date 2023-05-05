@@ -7,3 +7,7 @@ double CFixedElectricityConsumption::GetElectricityBill(double dConsumptionPerHo
     }
     return sum;
 }
+
+void CFixedElectricityConsumption::PrintName() const {
+    std::cout << "Fixed tariff";
+}

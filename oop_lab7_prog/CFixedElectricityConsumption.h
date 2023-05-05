@@ -6,4 +6,5 @@
 class CFixedElectricityConsumption : public CElectricityConsumption {
 public:
     double GetElectricityBill(double dConsumptionPerHours[24U]) const override;
+    void PrintName() const override;
 };

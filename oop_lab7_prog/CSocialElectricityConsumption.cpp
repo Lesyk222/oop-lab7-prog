@@ -7,3 +7,7 @@ double CSocialElectricityConsumption::GetElectricityBill(double dConsumptionPerH
     }
     return sum; // Повернення суми нарахувань у грн
 }
+
+void CSocialElectricityConsumption::PrintName() const {
+    std::cout << "Social tariff";
+}

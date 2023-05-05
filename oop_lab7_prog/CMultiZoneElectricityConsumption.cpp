@@ -16,3 +16,7 @@ double CMultiZoneElectricityConsumption::GetElectricityBill(double dConsumptionP
     }
     return sum;
 }
+
+void CMultiZoneElectricityConsumption::PrintName() const {
+    std::cout << "Multizone tariff";
+}
